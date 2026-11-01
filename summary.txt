@@ -1,0 +1,193 @@
+PROJECT 7: DRY BEAN CLASSIFICATION WITH LOGISTIC REGRESSION AND SVMs
+Status summary
+Last updated: 1 November 2026
+
+
+1. WHAT THIS COVERS
+
+This folder holds one person's share of Project 7: one dataset, analysed in full.
+The project brief asks each group member to take responsibility for one of two or
+three datasets. This is that section. It does not contain the other datasets or
+the combined group report.
+
+
+2. THE DATASET
+
+   Name              Dry Bean Dataset, UCI Machine Learning Repository
+   Rows              13,611 as published, 13,543 after removing 68 duplicates
+   Features          16 continuous geometric measurements, all quantitative
+   Target            Class, the bean variety
+   Classes           7 (DERMASON, SIRA, SEKER, HOROZ, CALI, BARBUNYA, BOMBAY)
+   Class balance     imbalanced at 6.79 to 1
+   Baseline          26.18 percent accuracy from always guessing the largest class
+
+Why this dataset was chosen: the target is naturally categorical with seven
+classes, which makes the multiclass strategy question real while staying fast to
+compute. All explanatory variables are quantitative, so no encoding was needed.
+The imbalance gives the class weight question something to act on, the features
+span five orders of magnitude so scaling genuinely matters, and the classes are
+nearly but not quite separable by a straight boundary, so linear and kernel
+models give a measurable comparison.
+
+
+3. WHAT HAS BEEN DONE
+
+3.1 Files in this folder
+
+   project7.ipynb
+       The complete analysis. 127 cells, 55 of them code, 31 figures, all
+       outputs saved in the file so it can be read without running it. Runs top
+       to bottom in about 2 minutes 25 seconds. Self contained: it downloads and
+       caches the dataset itself and needs no other project file.
+
+   Dry_Bean_Classification_Report.docx
+       The written report section. 6 numbered sections, 10 tables, about 4,180
+       words. Covers Introduction, The Dataset, Analysis Technique, Results,
+       Conclusions and Limitations.
+
+   Dry_Bean_Classification_Slides.pptx
+       The presentation deck. 8 slides, 2 native PowerPoint charts, speaker
+       notes on every slide. Written so that another group member could present
+       this section without having done the work.
+
+   README.md
+       What was done and how, with the key results and setup instructions.
+
+   requirements.txt
+       Pinned library versions the analysis was developed and tested against.
+
+   data/raw/
+       Dataset cache. Created automatically on the first run.
+
+3.2 Analysis completed
+
+The brief asks for at least four of its eight questions. All eight were answered:
+
+   1. Which variables are predictive of the target variable
+   2. Can logistic regression or a linear SVM predict well
+   3. What plots of selected pairs look like and where the boundary falls
+   4. How generalisable the models are and how bias and variance affect the choice
+   5. Whether the polynomial and RBF SVMs differ
+   6. What changing the class weight does and why it matters here
+   7. Whether there is a difference in runtime performance
+   8. What the one versus rest against one versus one choice costs
+
+Four models were compared under an identical protocol: logistic regression, a
+linear SVM, a polynomial kernel SVM and an RBF kernel SVM.
+
+3.3 Headline results
+
+   Model                 CV acc.   Test acc.   Balanced acc.   Stored parameters
+   Logistic Regression   0.9259    0.9209      0.9321          119 coefficients
+   Linear SVM            0.9220    0.9158      0.9270          119 coefficients
+   Polynomial SVM        0.9334    0.9256      0.9356          1,626 support vectors
+   RBF SVM               0.9346    0.9253      0.9358          1,828 support vectors
+   Majority baseline               0.2618      0.1429          none
+
+Main findings:
+
+   a. All four models land within 0.97 percentage points of each other. The
+      kernel SVMs beat the linear models by a statistically significant but very
+      small margin. The two kernels are statistically indistinguishable from
+      each other and agree on 99 percent of test predictions.
+
+   b. One pair of varieties, DERMASON and SIRA, causes 45.4 percent of every
+      model's errors. Those two genuinely overlap in these 16 measurements.
+      Every learning curve has flattened, so more data would not help and the
+      ceiling of roughly 93 percent is set by the features rather than by the
+      classifier.
+
+   c. Four features reach within one percentage point of the full sixteen.
+      Adding features in ANOVA order instead needs fourteen, because the F test
+      keeps selecting near copies of the same measurement.
+
+   d. Class weighting barely changes anything here, because the rarest class is
+      also the easiest. Sweeping BOMBAY's weight from 1 to 50 leaves precision
+      and recall at 1.0000 throughout. On a genuinely overlapping pair the same
+      sweep buys 0.087 recall for 0.183 precision.
+
+   e. Prediction is 419 times slower for the RBF SVM than for logistic
+      regression, 65.8 microseconds per bean against 0.157. One versus one was
+      faster to fit than one versus rest despite fitting 21 models instead of 7.
+
+   f. Recommended model: logistic regression. The RBF SVM is more accurate, but
+      by under one percentage point, and it costs roughly 15 times more stored
+      parameters and far slower prediction.
+
+3.4 Rubric coverage
+
+   Introduction        10 pts   Report section 1
+   Dataset             15 pts   Report section 2
+   Analysis technique  30 pts   Report section 3
+   Results             30 pts   Report section 4, all eight questions
+   Presentation slides  5 pts   Dry_Bean_Classification_Slides.pptx
+   Report technical    10 pts   Numbered sections, 10 tables, figures traceable
+                                to the notebook
+
+3.5 Quality checks run
+
+   The notebook executes end to end with zero errors and all 31 figures present.
+   The .docx and .pptx both pass the Office file validators.
+   Text overflow and canvas bounds were checked on every slide.
+   Every number quoted in the report and the deck was taken from the executed
+   notebook, not estimated.
+   No dash punctuation anywhere in any deliverable.
+
+
+4. WHAT IS LEFT
+
+4.1 Not another  responsibility
+
+   1. The other one or two datasets. The brief assigns one dataset per group
+      member, so the remaining datasets belong to the other members.
+
+   2. The combined group report. The brief asks for one report with a shared
+      introduction followed by one section per dataset. The report in this
+      folder is written as a standalone section and drops into that document as
+      it stands, but somebody has to write the group introduction and merge the
+      sections together.
+
+   3. A combined slide deck, if the group wants one deck rather than three.
+
+4.2 Worth doing before the presentation
+
+   The brief warns that whoever is selected to present must describe and explain
+   all two or three datasets, not only their own. That means a session where
+   each member walks the others through their work. The speaker notes on all 8
+   slides in this deck were written for exactly that, so another member can
+   deliver this section without having done the analysis.
+
+4.3 Optional, not required
+
+   Nothing in this section is incomplete against the rubric. If more depth were
+   ever wanted, the obvious extensions would be a repeated nested cross
+   validation for a more rigorous generalisation estimate, and testing whether
+   colour or texture features would break the 93 percent ceiling. Neither is
+   asked for by the brief.
+
+
+5. HOW TO RUN IT
+
+   cd CS_Project7
+   python3 -m venv .venv
+   .venv/bin/python -m pip install -r requirements.txt
+   .venv/bin/python -m ipykernel install --user --name project7-venv --display-name "Python (project7)"
+   jupyter lab project7.ipynb
+
+(The hyphens above are command syntax and have to stay for the commands to run.)
+
+Select the kernel named Python (project7), then Run All. The dataset downloads
+on the first run and is cached afterwards, so later runs need no network. The
+committed notebook already contains every output, so it can also simply be read.
+
+
+6. ENVIRONMENT
+
+   Python 3.10.11
+   numpy 2.0.0, pandas 2.3.3, sklearn 1.7.2, matplotlib 3.10.9, scipy 1.15.3
+
+A note recorded in the report: sklearn version 1.5 and later fit a multinomial
+softmax model for multiclass logistic regression rather than one versus rest.
+The project brief states otherwise. LinearSVC is genuinely one versus rest and
+SVC is always internally one versus one. All three were verified in code from
+the fitted objects rather than assumed.
