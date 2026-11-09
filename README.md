@@ -1,3 +1,8 @@
+# Grader:
+
+For the grader, the code is split into two files the Dry Bean dataset [project7.ipynb](./project7.ipynb) and the Breast Cancer Dataset [p7_ds_2.ipynb](./p7_ds_2.ipynb). Each was worked on by seperate people to meet the requirements of the project.
+
+
 # Classifying Dry Bean Varieties with Logistic Regression and SVMs
 
 Project 7, applying logistic regression and support vector machines to a real dataset,
